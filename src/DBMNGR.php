@@ -15,12 +15,13 @@ class DBMNGR
      */
     public function createInstance(DBInfo $DBInfo)
     {
-        self::$databases[$DBInfo->DbName . $DBInfo->DbType] = match ($DBInfo->DbType) {
-            DBType::PDO => $this->createInstancePdo($DBInfo),
-            DBType::MYSQL => $this->createInstanceMysqli($DBInfo),
-            DBType::MONGODB => $this->creatInstanceMongoDb($DBInfo),
-            default => throw new DatabaseTypeNotFoundException()
-        };
+        self::$databases[$DBInfo->DbType][$DBInfo->DbName] =
+            match ($DBInfo->DbType) {
+                DBType::PDO => $this->createInstancePdo($DBInfo),
+                DBType::MYSQL => $this->createInstanceMysqli($DBInfo),
+                DBType::MONGODB => $this->creatInstanceMongoDb($DBInfo),
+                default => throw new DatabaseTypeNotFoundException()
+            };
     }
 
     private function createInstancePdo(DBInfo $DBInfo): PDO
@@ -54,8 +55,44 @@ class DBMNGR
      */
     public function getInstance(DBInfo $DBInfo): mysqli|PDO|\MongoDB\Database
     {
-        if (isset(self::$databases[$DBInfo->DbName . $DBInfo->DbType])) {
-            return self::$databases[$DBInfo->DbName . $DBInfo->DbType];
+        if (isset(self::$databases[$DBInfo->DbType][$DBInfo->DbName])) {
+            return self::$databases[$DBInfo->DbType][$DBInfo->DbName];
+        } else {
+            throw new DatabaseInstanceDoesNotExistException();
+        }
+    }
+
+    /**
+     * @throws DatabaseInstanceDoesNotExistException
+     */
+    public function getInstancePdo(DBInfo $DBInfo): PDO
+    {
+        if (isset(self::$databases[DBType::PDO][$DBInfo->DbName])) {
+            return self::$databases[DBType::PDO][$DBInfo->DbName];
+        } else {
+            throw new DatabaseInstanceDoesNotExistException();
+        }
+    }
+
+    /**
+     * @throws DatabaseInstanceDoesNotExistException
+     */
+    public function getInstanceMysqli(DBInfo $DBInfo): Mysqli
+    {
+        if (isset(self::$databases[DBType::MYSQL][$DBInfo->DbName])) {
+            return self::$databases[DBType::MYSQL][$DBInfo->DbName];
+        } else {
+            throw new DatabaseInstanceDoesNotExistException();
+        }
+    }
+
+    /**
+     * @throws DatabaseInstanceDoesNotExistException
+     */
+    public function getInstanceMongoDb(DBInfo $DBInfo): \MongoDB\Database
+    {
+        if (isset(self::$databases[DBType::MONGODB][$DBInfo->DbName])) {
+            return self::$databases[DBType::MONGODB][$DBInfo->DbName];
         } else {
             throw new DatabaseInstanceDoesNotExistException();
         }
