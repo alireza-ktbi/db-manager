@@ -2,9 +2,9 @@
 
 namespace Alireza\DBManagement;
 
-use Alireza\DBManagement\Errors\DatabaseTypeNotFoundException;
-use PDO;
+use Alireza\DBManagement\Errors\{DatabaseInstanceDoesNotExistException, DatabaseTypeNotFoundException};
 use mysqli;
+use PDO;
 
 class DBMG
 {
@@ -44,8 +44,20 @@ class DBMG
     private function creatInstanceMongoDb(DBInfo $databaseInfo): \MongoDB\Database
     {
         $client = new \MongoDB\Client(
-            "mongodb://".$databaseInfo->DbPass.$databaseInfo->DbHost.":".$databaseInfo->DbPort ?? "27017"
+            "mongodb://" . $databaseInfo->DbPass . $databaseInfo->DbHost . ":" . $databaseInfo->DbPort ?? "27017"
         );
         return $client->{$databaseInfo->DbName};
+    }
+
+    /**
+     * @throws DatabaseInstanceDoesNotExistException
+     */
+    public function getInstance(DBInfo $databaseInfo): mysqli|PDO|\MongoDB\Database
+    {
+        if (isset($this->databases[$databaseInfo->DbName . $databaseInfo->DbType])) {
+            return $this->databases[$databaseInfo->DbName . $databaseInfo->DbType];
+        } else {
+            throw new DatabaseInstanceDoesNotExistException();
+        }
     }
 }
