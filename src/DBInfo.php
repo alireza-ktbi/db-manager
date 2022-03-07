@@ -10,6 +10,6 @@ class DBInfo
         public string $DbHost,
         public string $DbUser,
         public string $DbPass,
-        public ?int $DbPort
+        public ?int $DbPort = null
     ){}
 }
