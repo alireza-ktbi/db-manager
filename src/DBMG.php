@@ -3,6 +3,8 @@
 namespace Alireza\DBManagement;
 
 use Alireza\DBManagement\Errors\DatabaseTypeNotFoundException;
+use PDO;
+use mysqli;
 
 class DBMG
 {
@@ -14,15 +16,21 @@ class DBMG
     public function createInstance(DBInfo $databaseInfo)
     {
         $this->databases[$databaseInfo->DbName . $databaseInfo->DbType] = match ($databaseInfo->DbType) {
-            DBType::PDO => $this->getInstancePdo($databaseInfo),
+            DBType::PDO => $this->createInstancePdo($databaseInfo),
+            DBType::MYSQL => $this->createInstanceMysqli($databaseInfo),
             default => throw new DatabaseTypeNotFoundException()
         };
     }
 
-    private function getInstancePdo(DBInfo $databaseInfo): \PDO
+    private function createInstancePdo(DBInfo $databaseInfo): PDO
     {
         $dsn = "mysql:host=$databaseInfo->DbHost;dbname=$databaseInfo->DbName";
         if (isset($databaseInfo->DbPort)) $dsn .= ";port=" . strval($databaseInfo->DbPort);
-        return new \PDO($dsn, $databaseInfo->DbUser, $databaseInfo->DbPass,);
+        return new PDO($dsn, $databaseInfo->DbUser, $databaseInfo->DbPass);
+    }
+
+    private function createInstanceMysqli(DBInfo $databaseInfo): mysqli
+    {
+        return new mysqli($databaseInfo->DbHost, $databaseInfo->DbUser, $databaseInfo->DbPass, $databaseInfo->DbName);
     }
 }
