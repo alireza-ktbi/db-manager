@@ -8,14 +8,14 @@ use PDO;
 
 class DBMG
 {
-    private array $databases;
+    private static array $databases;
 
     /**
      * @throws DatabaseTypeNotFoundException
      */
     public function createInstance(DBInfo $databaseInfo)
     {
-        $this->databases[$databaseInfo->DbName . $databaseInfo->DbType] = match ($databaseInfo->DbType) {
+        self::$databases[$databaseInfo->DbName . $databaseInfo->DbType] = match ($databaseInfo->DbType) {
             DBType::PDO => $this->createInstancePdo($databaseInfo),
             DBType::MYSQL => $this->createInstanceMysqli($databaseInfo),
             DBType::MONGODB => $this->creatInstanceMongoDb($databaseInfo),
@@ -54,8 +54,8 @@ class DBMG
      */
     public function getInstance(DBInfo $databaseInfo): mysqli|PDO|\MongoDB\Database
     {
-        if (isset($this->databases[$databaseInfo->DbName . $databaseInfo->DbType])) {
-            return $this->databases[$databaseInfo->DbName . $databaseInfo->DbType];
+        if (isset(self::$databases[$databaseInfo->DbName . $databaseInfo->DbType])) {
+            return self::$databases[$databaseInfo->DbName . $databaseInfo->DbType];
         } else {
             throw new DatabaseInstanceDoesNotExistException();
         }
