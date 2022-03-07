@@ -1,12 +1,12 @@
 <?php
 
-namespace Alireza\DBManagement;
+namespace Alireza\DbManager;
 
-use Alireza\DBManagement\Errors\{DatabaseInstanceDoesNotExistException, DatabaseTypeNotFoundException};
+use Alireza\DbManager\Errors\{DatabaseInstanceDoesNotExistException, DatabaseTypeNotFoundException};
 use mysqli;
 use PDO;
 
-class DBMG
+class DBMNGR
 {
     private static array $databases;
 

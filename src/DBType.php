@@ -1,6 +1,6 @@
 <?php
 
-namespace Alireza\DBManagement;
+namespace Alireza\DbManager;
 
 class DBType
 {
