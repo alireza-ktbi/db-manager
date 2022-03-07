@@ -1,0 +1,16 @@
+{
+    "name": "alireza/db-management",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Alireza\\DbManagement\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "alireza ketabi",
+            "email": "alirezaketabi.h@gmail.com"
+        }
+    ],
+    "require": {}
+}
