@@ -1,6 +1,6 @@
 <?php
 
-namespace Alireza\DBManagement\Errors;
+namespace Alireza\DbManager\Errors;
 
 class DatabaseInstanceDoesNotExistException extends \Exception
 {

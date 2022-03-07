@@ -1,9 +1,9 @@
 {
-  "name": "alireza/db-management",
+  "name": "alireza/db-manager",
   "type": "library",
   "autoload": {
     "psr-4": {
-      "Alireza\\DbManagement\\": "src/"
+      "Alireza\\DbManager\\": "src/"
     }
   },
   "authors": [
