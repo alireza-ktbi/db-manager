@@ -3,8 +3,10 @@
 namespace Alireza\DbManager;
 
 use Alireza\DbManager\Errors\{DatabaseInstanceDoesNotExistException, DatabaseTypeNotFoundException};
+use Exception;
 use mysqli;
 use PDO;
+use PDOStatement;
 
 class DBMNGR
 {
@@ -95,6 +97,19 @@ class DBMNGR
             return self::$databases[DBType::MONGODB][$DBInfo->DbName];
         } else {
             throw new DatabaseInstanceDoesNotExistException();
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function ErrorHandlePDO(PDOStatement|false $stmt)
+    {
+        if (!$stmt) {
+            throw new Exception(
+                "database error in CLASS: " . __CLASS__ . " METHOD: " . __METHOD__ . " ErrorCode: " .
+                $stmt->errorCode() . " ErrorInfo: " . json_encode($stmt->errorInfo(), true)
+            );
         }
     }
 }
